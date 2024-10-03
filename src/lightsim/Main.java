@@ -4,28 +4,21 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 public class Main {
 
     private static int FPS = 120;
-    private static int WWIDTH = 1280;
-    private static int WHEIGHT = 720;
+    private static int WWIDTH = 1920;
+    private static int WHEIGHT = 1080;
     private static float maxRadius;
     private static int cameraX = 0;
     private static int cameraY = 0;
-    private static final int CHUNK_SIZE = WWIDTH; // Each chunk takes up the screen width
-    private static Set<String> generatedChunks = new HashSet<>(); // Track generated chunks
     private static float numSegments;
     private static int tick;
-    private static boolean debugmode;
-    
     static class Light {
         float x, y;
         float r, g, b;
@@ -114,11 +107,6 @@ public class Main {
                 numSegments += 1;
             }
 
-            // Determine the current chunk
-            int currentChunkX = cameraX / CHUNK_SIZE;
-            int currentChunkY = cameraY / WHEIGHT;
-            String currentChunk = currentChunkX + "," + currentChunkY;
-
 
         } finally {
         }
@@ -139,12 +127,12 @@ public class Main {
     
     public static void main(String[] args) {
         try {
-        	debugmode = false;
         	maxRadius = 10;
         	numSegments = 100f;
             System.out.println("Frame Per Second : " + FPS);
-            Display.setDisplayMode(new DisplayMode(WWIDTH, WHEIGHT));
+            //Display.setDisplayMode(new DisplayMode(WWIDTH, WHEIGHT));
             Display.setTitle("The Rhomboid of Desire");
+            Display.setFullscreen(true);
             Display.create();
             Keyboard.create();
             Display.setVSyncEnabled(true);
@@ -192,6 +180,9 @@ public class Main {
 
                 Display.update();
                 Display.sync(FPS);
+                if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+                	die();
+                }
             }
 
         } catch (LWJGLException e) {
