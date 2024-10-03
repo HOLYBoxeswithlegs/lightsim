@@ -69,15 +69,6 @@ public class Main {
 
     static ArrayList<Light> lights = new ArrayList<>();
 
-    public static void generateChunk(int chunkX, int chunkY) {
-        Random rand = new Random();
-        for (int i = 0; i < 10; i++) {
-            int randomX = rand.nextInt(CHUNK_SIZE) + chunkX * CHUNK_SIZE;
-            int randomY = rand.nextInt(WHEIGHT) + chunkY * WHEIGHT;
-            lights.add(new Light(randomX, randomY));
-        }
-    }
-
     public static void input() {
         try {
             if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && Display.isCloseRequested()) {
@@ -128,11 +119,7 @@ public class Main {
             int currentChunkY = cameraY / WHEIGHT;
             String currentChunk = currentChunkX + "," + currentChunkY;
 
-            // Generate lights for the current chunk if not already generated
-            if (!generatedChunks.contains(currentChunk)) {
-                generateChunk(currentChunkX, currentChunkY);
-                generatedChunks.add(currentChunk);
-            }
+
         } finally {
         }
     }
@@ -181,11 +168,22 @@ public class Main {
                 System.out.println(tick);
 
                 // Handle mouse input
-                if (Mouse.isButtonDown(0)) {
-                    int mouseX = Mouse.getX() + cameraX;
-                    int mouseY = WHEIGHT - Mouse.getY() + cameraY; // Invert y coordinate
-                    lights.add(new Light(mouseX, mouseY));
+
+                boolean wasMousePressed = false;  // Tracks if the mouse was pressed in the last frame
+
+                // Check if the mouse button is pressed in the current frame
+                boolean isMousePressed = Mouse.isButtonDown(0);
+
+                if (isMousePressed && !wasMousePressed) {
+                	// The mouse was just pressed (transition from not pressed to pressed)
+                	int mouseX = Mouse.getX() + cameraX;
+                	int mouseY = Mouse.getY() + cameraY; // Invert y coordinate
+                	lights.add(new Light(mouseX, mouseY));
                 }
+
+                // Update the mouse state for the next frame
+                wasMousePressed = isMousePressed;
+
 
                 // Render lights
                 for (Light light : lights) {
