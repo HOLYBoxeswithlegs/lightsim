@@ -35,7 +35,7 @@ public class Main {
         }
 
         void draw() {
-            int numCircles = 5; // Number of circles to create the glow effect
+            int numCircles = 5;
 
             for (int i = 0; i < numCircles; i++) {
                 float radius = maxRadius * (i + 1) / numCircles;
@@ -45,8 +45,6 @@ public class Main {
         }
 
         void drawCircle(float cx, float cy, float radius, float r, float g, float b, float alpha) {
-        	//indicates how many verticies are in a shape
-        	// triangle = 3 diamond = 4 circle = 100 etc etc
             GL11.glColor4f(r, g, b, alpha);
             GL11.glBegin(GL11.GL_TRIANGLE_FAN);
             GL11.glVertex2f(cx, cy);
@@ -130,14 +128,12 @@ public class Main {
         	maxRadius = 10;
         	numSegments = 100f;
             System.out.println("Frame Per Second : " + FPS);
-            //Display.setDisplayMode(new DisplayMode(WWIDTH, WHEIGHT));
             Display.setTitle("The Rhomboid of Desire");
             Display.setFullscreen(true);
             Display.create();
             Keyboard.create();
             Display.setVSyncEnabled(true);
 
-            // Set up OpenGL
             GL11.glMatrixMode(GL11.GL_PROJECTION);
             GL11.glLoadIdentity();
             GL11.glOrtho(0, WWIDTH, 0, WHEIGHT, -1, 1);
@@ -155,25 +151,19 @@ public class Main {
                 tick();
                 System.out.println(tick);
 
-                // Handle mouse input
+                boolean wasMousePressed = false;
 
-                boolean wasMousePressed = false;  // Tracks if the mouse was pressed in the last frame
-
-                // Check if the mouse button is pressed in the current frame
                 boolean isMousePressed = Mouse.isButtonDown(0);
 
                 if (isMousePressed && !wasMousePressed) {
-                	// The mouse was just pressed (transition from not pressed to pressed)
                 	int mouseX = Mouse.getX() + cameraX;
-                	int mouseY = Mouse.getY() + cameraY; // Invert y coordinate
+                	int mouseY = Mouse.getY() + cameraY;
                 	lights.add(new Light(mouseX, mouseY));
                 }
 
-                // Update the mouse state for the next frame
                 wasMousePressed = isMousePressed;
 
 
-                // Render lights
                 for (Light light : lights) {
                     light.draw();
                 }
